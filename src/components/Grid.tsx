@@ -26,7 +26,7 @@ export function Grid() {
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex">
           {row.map((tile, tileIndex) => {
-            const { isStart, isEnd, isPath, isTraversed, isWall } = tile;
+            const { isEnd, isStart, isPath, isTraversed, isWall } = tile;
             return (
               <Tile
                 key={tileIndex}
