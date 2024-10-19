@@ -1,5 +1,5 @@
-import { MAX_COLS, MAX_ROWS } from "./constants";
-import { GridType, TileType } from "./types";
+import { MAX_COLS, MAX_ROWS, SPEEDS, TILE_STYLE } from "./constants";
+import { GridType, SpeedType, TileType } from "./types";
 
 const createRow = (row: number, startTile: TileType, endTile: TileType) => {
   const currentRow = [];
@@ -47,4 +47,29 @@ export const createNewGrid = (grid: GridType, row: number, col: number) => {
 
 export const isEqual = (a: TileType, b: TileType) => {
   return a.row === b.row && a.col === b.col;
+};
+
+export const isRowColEqual = (row: number, col: number, tile: TileType) => {
+  return row === tile.row && col === tile.col;
+};
+
+export const sleep = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+export const destroyTile = async (
+  grid: GridType,
+  row: number,
+  col: number,
+  speed: SpeedType
+) => {
+  grid[row][col].isWall = false;
+  document.getElementById(`${row}-${col}`)!.className = TILE_STYLE;
+  await sleep(20 * SPEEDS.find((s) => s.value === speed)!.value - 5);
+};
+
+export const getRandInt = (min: number, max: number) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min);
 };
