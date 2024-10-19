@@ -9,6 +9,7 @@ import { runMazeAlgorithm } from "../utils/runMazeAlgo";
 import { useSpeed } from "../hooks/useSpeed";
 
 export function Nav() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isDisabled, setIsDisabled] = useState(false);
   const { maze, setMaze, grid, setGrid, setisGraphVisualized } =
     usePathfinding();
