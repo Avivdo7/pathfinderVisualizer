@@ -14,7 +14,7 @@ interface PathfindingContextInterface {
   setGrid: (grid: GridType) => void;
 
   isGraphVisualized: boolean;
-  setisGraphVisualized: (isGraphVisualized: boolean) => void;
+  setIsGraphVisualized: (isGraphVisualized: boolean) => void;
 }
 
 export const PathfindingContext = createContext<
@@ -27,7 +27,7 @@ export const PathfindingProvider = ({ children }: { children: ReactNode }) => {
   const [grid, setGrid] = useState<GridType>(
     createGrid(START_TILE_CONFIG, END_TILE_CONFIG)
   );
-  const [isGraphVisualized, setisGraphVisualized] = useState<boolean>(false);
+  const [isGraphVisualized, setIsGraphVisualized] = useState<boolean>(false);
 
   return (
     <PathfindingContext.Provider
@@ -39,7 +39,7 @@ export const PathfindingProvider = ({ children }: { children: ReactNode }) => {
         grid,
         setGrid,
         isGraphVisualized,
-        setisGraphVisualized,
+        setIsGraphVisualized,
       }}
     >
       {children}

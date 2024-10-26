@@ -1,17 +1,27 @@
 import { useState } from "react";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { useTile } from "../hooks/useTile";
-import { MAZES } from "../utils/constants";
+import { ALGOS, MAZES } from "../utils/constants";
 import { resetGrid } from "../utils/resetGrid";
-import { MazeType } from "../utils/types";
+import { AlgorithmType, MazeType } from "../utils/types";
 import { Select } from "./Select";
 import { runMazeAlgorithm } from "../utils/runMazeAlgo";
 import { useSpeed } from "../hooks/useSpeed";
+import { PlayButton } from "./PlayButton";
+import { runPathfindingAlgorithm } from "../utils/runPathfindingAlgorithm";
 
 export function Nav() {
-  const [, setIsDisabled] = useState(false);
-  const { maze, setMaze, grid, setGrid, setisGraphVisualized } =
-    usePathfinding();
+  const [isDisabled, setIsDisabled] = useState(false);
+  const {
+    maze,
+    setMaze,
+    grid,
+    setGrid,
+    isGraphVisualized,
+    setIsGraphVisualized,
+    algorithm,
+    setAlgorithm,
+  } = usePathfinding();
   const { startTile, endTile } = useTile();
   const { speed } = useSpeed();
 
@@ -27,7 +37,25 @@ export function Nav() {
     runMazeAlgorithm({ maze, grid, startTile, endTile, setIsDisabled, speed });
     const newGrid = grid.slice();
     setGrid(newGrid);
-    setisGraphVisualized(false);
+    setIsGraphVisualized(false);
+  };
+
+  const handlerRunVisualizer = () => {
+    if (isGraphVisualized) {
+      setIsGraphVisualized(false);
+      resetGrid({ grid: grid.slice(), startTile, endTile });
+      return;
+    }
+
+    const { traversedTiles, path } = runPathfindingAlgorithm({
+      algorithm,
+      grid,
+      startTile,
+      endTile,
+    });
+
+    console.log("traversedTiles", traversedTiles);
+    console.log("path", path);
   };
 
   return (
@@ -44,6 +72,19 @@ export function Nav() {
             onChange={(e) => {
               handleGenerateMaze(e.target.value as MazeType);
             }}
+          />
+          <Select
+            label="Graph"
+            value={algorithm}
+            options={ALGOS}
+            onChange={(e) => {
+              setAlgorithm(e.target.value as AlgorithmType);
+            }}
+          />
+          <PlayButton
+            isDisabled={isDisabled}
+            isGraphVisualized={isGraphVisualized}
+            handlerRunVisualizer={handlerRunVisualizer}
           />
         </div>
       </div>
