@@ -47,13 +47,13 @@ export const ALGOS: AlgoSelectType[] = [
   { name: "A-Star", value: "A_STAR" },
   { name: "DFS", value: "DFS" },
   { name: "BFS", value: "BFS" },
-  
 ];
 
 export const SPEEDS: SpeedSelectType[] = [
-  { name: "Slow", value: 2 },
-  { name: "Medium", value: 1 },
-  { name: "Fast", value: 0.5 },
+  { name: "Slow", value: 1.5 },
+  { name: "Medium", value: 0.8 },
+  { name: "Fast", value: 0.3 },
 ];
 
 export const SLEEP_TIME = 8;
+export const EXTENDED_SLEEP_TIME = 30;

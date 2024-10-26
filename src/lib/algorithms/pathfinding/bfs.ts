@@ -8,7 +8,6 @@ export const bfs = (grid: GridType, startTile: TileType, endTile: TileType) => {
   const base = grid[startTile.row][startTile.col];
   base.distance = 0;
   base.isTraversed = true;
-
   const unTraversedTiles = [base];
 
   while (unTraversedTiles.length) {
@@ -31,7 +30,7 @@ export const bfs = (grid: GridType, startTile: TileType, endTile: TileType) => {
     }
   }
 
-  const path = [];
+  const path= [];
   let tile = grid[endTile.row][endTile.col];
   while (tile !== null) {
     tile.isPath = true;

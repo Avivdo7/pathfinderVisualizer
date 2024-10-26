@@ -15,12 +15,12 @@ export const runPathfindingAlgorithm = ({
   switch (algorithm) {
     case "BFS":
       return bfs(grid, startTile, endTile);
-    case "DFS":
-      return;
-    case "DIJKSTRA":
-      return;
-    case "A_STAR":
-      return;
+    // case "DFS":
+    //   return;
+    // case "DIJKSTRA":
+    //   return;
+    // case "A_STAR":
+    //   return;
     default:
       return bfs(grid, startTile, endTile);
   }

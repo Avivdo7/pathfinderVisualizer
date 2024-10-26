@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { MutableRefObject, useState } from "react";
 import { usePathfinding } from "../hooks/usePathfinding";
 import { useTile } from "../hooks/useTile";
-import { ALGOS, MAZES } from "../utils/constants";
+import {
+  ALGOS,
+  EXTENDED_SLEEP_TIME,
+  MAZES,
+  SLEEP_TIME,
+  SPEEDS,
+} from "../utils/constants";
 import { resetGrid } from "../utils/resetGrid";
-import { AlgorithmType, MazeType } from "../utils/types";
+import { AlgorithmType, MazeType, SpeedType } from "../utils/types";
 import { Select } from "./Select";
 import { runMazeAlgorithm } from "../utils/runMazeAlgo";
 import { useSpeed } from "../hooks/useSpeed";
 import { PlayButton } from "./PlayButton";
 import { runPathfindingAlgorithm } from "../utils/runPathfindingAlgorithm";
+import { animatePath } from "../utils/animatePath";
 
-export function Nav() {
+export function Nav({
+  isVisualRunningRef,
+}: {
+  isVisualRunningRef: MutableRefObject<boolean>;
+}) {
   const [isDisabled, setIsDisabled] = useState(false);
   const {
     maze,
@@ -23,16 +34,13 @@ export function Nav() {
     setAlgorithm,
   } = usePathfinding();
   const { startTile, endTile } = useTile();
-  const { speed } = useSpeed();
+  const { speed, setSpeed } = useSpeed();
 
   const handleGenerateMaze = (maze: MazeType) => {
-    if (maze === "NONE") {
-      setMaze(maze);
-      resetGrid({ grid, startTile, endTile });
-      return;
-    }
-
     setMaze(maze);
+    resetGrid({ grid, startTile, endTile });
+    if (maze === "NONE")return;
+
     setIsDisabled(true);
     runMazeAlgorithm({ maze, grid, startTile, endTile, setIsDisabled, speed });
     const newGrid = grid.slice();
@@ -54,8 +62,16 @@ export function Nav() {
       endTile,
     });
 
-    console.log("traversedTiles", traversedTiles);
-    console.log("path", path);
+    animatePath(traversedTiles, path, startTile, endTile, speed);
+    setIsDisabled(true);
+    isVisualRunningRef.current = true;
+    setTimeout(() => {
+      const newGrid = grid.slice();
+      setGrid(newGrid);
+      setIsGraphVisualized(true);
+      setIsDisabled(false);
+      isVisualRunningRef.current = false;
+    }, SLEEP_TIME * traversedTiles.length + SLEEP_TIME * 2 + EXTENDED_SLEEP_TIME * (path.length + 60) * SPEEDS.find((s) => s.value === speed)!.value);
   };
 
   return (
@@ -81,6 +97,14 @@ export function Nav() {
               setAlgorithm(e.target.value as AlgorithmType);
             }}
           />
+          <Select
+            label="Speed"
+            value={speed}
+            options={SPEEDS}
+            onChange={(e)=>{
+              setSpeed(parseFloat(e.target.value) as SpeedType);
+            }}
+           />
           <PlayButton
             isDisabled={isDisabled}
             isGraphVisualized={isGraphVisualized}
